@@ -19,6 +19,9 @@ public class SpawnDrone : MonoBehaviour
         lineRenderer.endColor = Color.black;
         lineRenderer.startWidth = 0.01f;
         lineRenderer.endWidth = 0.01f;
+        Material blackDiffuseMat = new Material(Shader.Find("Unlit/Color"));
+        blackDiffuseMat.color = Color.black;
+        lineRenderer.material = blackDiffuseMat;
         lineRenderer.useWorldSpace = true;
     }
 
@@ -39,6 +42,11 @@ public class SpawnDrone : MonoBehaviour
             }
         }
 
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(lineRenderer.material);
     }
 
     public void spawn()
