@@ -29,8 +29,8 @@ public class SpawnDrone : MonoBehaviour
     {
         if (this.GetComponent<Transform>().hasChanged)
         {
-            transform.hasChanged = false;
             drawLine();
+            transform.hasChanged = false;
         }
         foreach (var item in drones)
         {
