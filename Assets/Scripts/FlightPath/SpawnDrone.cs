@@ -67,10 +67,19 @@ public class SpawnDrone : MonoBehaviour
         for (int i = 0; i < drones.Count; i++)
         {
             Renderer rend = drones[i].GetComponent<Renderer>();
+            dronePositions[i] = drones[i].GetComponent<Renderer>().bounds.center;
             lineRenderer.SetPosition(i, rend.bounds.center);
         }
 
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, this.GetComponent<Renderer>().bounds.center);
     }
 
+    public List<GameObject> getDroneList() 
+    {
+        return drones;
+    }
+    public List<Vector3> getDronePositionList()
+    {
+        return dronePositions;
+    }
 }
