@@ -18,11 +18,26 @@ public class UI_Manager : MonoBehaviour
     void Start()
     {
         SD = GetComponent<SpawnDrone>();
+        foreach (var entry in entries)
+        {
+            Button[] buttons = entry.GetComponentsInChildren<Button>();
+            buttons[1].onClick.AddListener(delegate { removeEntry(entries.IndexOf(entry)); });
+            buttons[0].onClick.AddListener(delegate { displayCamera(entries.IndexOf(entry)); });            
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    public void UpdateList()
+    {
+        foreach (var entry in entries)
+        {
+            entry.SetActive(false);
+        }
         drones = SD.getDroneList();
         dronePositions = SD.getDronePositionList();
         for (int i = 0; i < drones.Count; i++)
@@ -31,17 +46,20 @@ public class UI_Manager : MonoBehaviour
         }
     }
 
-    void addEntry(int index)
+    public void addEntry(int index)
     {
         entries[index].SetActive(true);
         Text[] text = entries[index].GetComponentsInChildren<Text>();
         text[1].text = dronePositions[index].ToString();
-        
+
 
     }
-    void removeEntry(int index)
+    public void removeEntry(int index)
     {
-        entries[index].SetActive(false);
-
+        SD.delete(index);
+    }
+    private void displayCamera(int index)
+    {
+        Debug.Log("Display camera for drone " + index + 1);
     }
 }

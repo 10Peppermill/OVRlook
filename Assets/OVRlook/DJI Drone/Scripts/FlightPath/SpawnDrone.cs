@@ -12,8 +12,12 @@ public class SpawnDrone : MonoBehaviour
     public GameObject drone;
     public Transform position;
 
+    UI_Manager UI;
+
     public void Start()
     {
+        UI = GetComponent<UI_Manager>();
+
         lineRenderer = new GameObject("Line").AddComponent<LineRenderer>();
         lineRenderer.startColor = Color.black;
         lineRenderer.endColor = Color.black;
@@ -38,6 +42,7 @@ public class SpawnDrone : MonoBehaviour
             if (item.transform.hasChanged)
             {
                 drawLine();
+                UI.UpdateList();
                 transform.hasChanged = false;
             }
         }
@@ -54,11 +59,22 @@ public class SpawnDrone : MonoBehaviour
         GameObject spawnedDrone = (GameObject)Instantiate(drone, position.position, position.rotation);
         drones.Add(spawnedDrone);
         dronePositions.Add(spawnedDrone.GetComponent<Renderer>().bounds.center);
+        //UI.addEntry(drones.Count - 1);
+        UI.UpdateList();
         if (drones.Count > 1)
         {
             drawLine();
         }
     }
+    public void delete(int index)
+    {
+        Destroy(drones[index]);
+        drones.RemoveAt(index);
+        dronePositions.RemoveAt(index);
+        UI.UpdateList();
+        drawLine();
+    }
+
 
     public void drawLine()
     {
