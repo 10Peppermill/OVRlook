@@ -7,6 +7,7 @@ public class SpawnDrone : MonoBehaviour
 {
     private List<GameObject> drones = new List<GameObject>();
     private List<Vector3> dronePositions = new List<Vector3>();
+    private Texture2D cameraView;
 
     public LineRenderer lineRenderer;
     public GameObject drone;
@@ -28,7 +29,6 @@ public class SpawnDrone : MonoBehaviour
         lineRenderer.material = blackDiffuseMat;
         lineRenderer.useWorldSpace = true;
     }
-
     void Update()
     {
         if (this.GetComponent<Transform>().hasChanged)
@@ -59,7 +59,6 @@ public class SpawnDrone : MonoBehaviour
         GameObject spawnedDrone = (GameObject)Instantiate(drone, position.position, position.rotation);
         drones.Add(spawnedDrone);
         dronePositions.Add(spawnedDrone.GetComponent<Renderer>().bounds.center);
-        //UI.addEntry(drones.Count - 1);
         UI.UpdateList();
         if (drones.Count > 1)
         {

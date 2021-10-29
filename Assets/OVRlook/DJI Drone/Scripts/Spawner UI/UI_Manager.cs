@@ -11,7 +11,7 @@ public class UI_Manager : MonoBehaviour
     private List<Vector3> dronePositions = new List<Vector3>();
 
     public List<GameObject> entries = new List<GameObject>();
-
+    public Image cameraViewPanel;
 
 
     // Start is called before the first frame update
@@ -60,6 +60,9 @@ public class UI_Manager : MonoBehaviour
     }
     private void displayCamera(int index)
     {
+        CameraView CV = drones[index].GetComponent<CameraView>();
+        Texture2D cameraView = CV.getScreenShot();
+        cameraViewPanel.GetComponent<Image>().material.SetTexture("texture", cameraView);
         Debug.Log("Display camera for drone " + index + 1);
     }
 }
