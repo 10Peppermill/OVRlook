@@ -36,7 +36,7 @@ public class SpawnDrone : MonoBehaviour
             drawLine();
             transform.hasChanged = false;
         }
-        foreach (var item in drones)
+        foreach (GameObject item in drones)
         {
 
             if (item.transform.hasChanged)
@@ -53,10 +53,12 @@ public class SpawnDrone : MonoBehaviour
     {
         Destroy(lineRenderer.material);
     }
-
     public void spawn()
     {
-        GameObject spawnedDrone = (GameObject)Instantiate(drone, position.position, position.rotation);
+        Quaternion newDrownRotation = Quaternion.identity;
+        newDrownRotation.eulerAngles = new Vector3(0,position.rotation.eulerAngles.y,0); 
+        GameObject spawnedDrone = (GameObject)Instantiate(drone, position.position, newDrownRotation);
+
         drones.Add(spawnedDrone);
         dronePositions.Add(spawnedDrone.GetComponent<Renderer>().bounds.center);
         UI.UpdateList();
@@ -73,8 +75,6 @@ public class SpawnDrone : MonoBehaviour
         UI.UpdateList();
         drawLine();
     }
-
-
     public void drawLine()
     {
         lineRenderer.positionCount = drones.Count + 1;
@@ -87,8 +87,7 @@ public class SpawnDrone : MonoBehaviour
         }
 
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, this.GetComponent<Renderer>().bounds.center);
-    }
-
+    }   
     public List<GameObject> getDroneList() 
     {
         return drones;
