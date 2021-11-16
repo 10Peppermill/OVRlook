@@ -12,6 +12,7 @@ public class UI_Manager : MonoBehaviour
 
     public List<GameObject> entries = new List<GameObject>();
     public Image cameraViewPanel;
+    public Button FinalizePath;
 
 
     // Start is called before the first frame update
@@ -21,9 +22,10 @@ public class UI_Manager : MonoBehaviour
         foreach (var entry in entries)
         {
             Button[] buttons = entry.GetComponentsInChildren<Button>();
-            buttons[1].onClick.AddListener(delegate { removeEntry(entries.IndexOf(entry)); });
-            buttons[0].onClick.AddListener(delegate { displayCamera(entries.IndexOf(entry)); });            
+            buttons[0].onClick.AddListener(delegate { displayCamera(entries.IndexOf(entry)); }); //button 0 is the camera button
+            buttons[1].onClick.AddListener(delegate { removeEntry(entries.IndexOf(entry)); }); //button 1 is the delete button
         }
+        FinalizePath.GetComponent<Button>().onClick.AddListener(delegate { finalize(); });
     }
 
     // Update is called once per frame
@@ -58,6 +60,18 @@ public class UI_Manager : MonoBehaviour
     {
         SD.delete(index);
     }
+
+    public void finalize() 
+    {
+        drones = SD.getDroneList();
+        foreach (var drone in drones)
+        {
+            Vector3 position = drone.GetComponent<Renderer>().bounds.center;
+            Debug.Log(position);
+        }
+        Debug.Log("Jobs Done!");
+    }
+
     private void displayCamera(int index)
     {
         CameraView CV = drones[index].GetComponent<CameraView>();
