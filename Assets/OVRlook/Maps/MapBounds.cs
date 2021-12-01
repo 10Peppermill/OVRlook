@@ -17,8 +17,11 @@ public class MapBounds : MonoBehaviour
         //Instantiate(marker, transform.TransformPoint(rend.bounds.min), Quaternion.identity);
         //Instantiate(marker, transform.TransformPoint(rend.bounds.max), Quaternion.identity);
 
+        
+
         Instantiate(marker, rend.bounds.min, Quaternion.identity);
         Instantiate(marker, rend.bounds.max, Quaternion.identity);
+        Instantiate(marker, rend.bounds.center, Quaternion.identity);
 
         //List<Vector3> VertList = new List<Vector3>(map.GetComponent<MeshFilter>().sharedMesh.vertices);
         //Debug.Log(VertList[0]);

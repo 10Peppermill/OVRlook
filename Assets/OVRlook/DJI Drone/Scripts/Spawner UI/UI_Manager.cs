@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class UI_Manager : MonoBehaviour
 {
@@ -13,12 +14,15 @@ public class UI_Manager : MonoBehaviour
     public List<GameObject> entries = new List<GameObject>();
     public Image cameraViewPanel;
     public Button FinalizePath;
+    public GameObject marker;
 
 
     // Start is called before the first frame update
     void Start()
     {
         SD = GetComponent<SpawnDrone>();
+        Vector2 latlong = new Vector2(42.336478f, -71.093402f);
+        GPSEncoder.SetLocalOrigin(latlong);
         foreach (var entry in entries)
         {
             Button[] buttons = entry.GetComponentsInChildren<Button>();
@@ -61,15 +65,41 @@ public class UI_Manager : MonoBehaviour
         SD.delete(index);
     }
 
-    public void finalize() 
+    //public void finalize() 
+    //{
+    //    drones = SD.getDroneList();
+    //    foreach (var drone in drones)
+    //    {
+    //        Vector3 position = drone.GetComponent<Renderer>().bounds.center;
+    //        Instantiate(marker, position, Quaternion.identity);
+    //        Debug.Log(position);
+    //    }
+    //    Debug.Log("Jobs Done!");
+    //}
+    public void finalize()
     {
         drones = SD.getDroneList();
-        foreach (var drone in drones)
-        {
-            Vector3 position = drone.GetComponent<Renderer>().bounds.center;
-            Debug.Log(position);
-        }
+
+            foreach (var drone in drones)
+            {
+                Vector3 position = drone.GetComponent<Renderer>().bounds.center;
+                Instantiate(marker, position, Quaternion.identity);
+                Vector2 latlong = new Vector2(0, 0);
+                latlong = GPSEncoder.USCToGPS(position);
+            writeCSV(latlong, position.y.ToString("R"), drone.transform.rotation.eulerAngles.y.ToString("R"));
+                //Debug.Log(latlong.x);
+                //Debug.Log(latlong.y);
+            }
         Debug.Log("Jobs Done!");
+    }
+
+    private void writeCSV(Vector2 latlon, string altitude, string heading)
+    {
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"FlightPath.csv", true))
+            {
+                file.WriteLine(latlon.x.ToString("R") + "," + latlon.y.ToString("R") + "," + altitude + "," + heading);
+            }
     }
 
     private void displayCamera(int index)
