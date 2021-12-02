@@ -5,7 +5,22 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class SpawnDrone : MonoBehaviour
 {
-    private List<GameObject> drones = new List<GameObject>();
+    public class DroneData
+    {
+        public int camState;
+        public GameObject drone;
+        public DroneData(GameObject d)
+        {
+            camState = -1;
+            drone = d;
+        }
+        public void setCamState(int newCamState) 
+        {
+            camState = newCamState;
+        }
+    }
+    //private List<GameObject> drones = new List<GameObject>();
+    private List<DroneData> drones = new List<DroneData>();
     private List<Vector3> dronePositions = new List<Vector3>();
     private Texture2D cameraView;
 
@@ -36,10 +51,10 @@ public class SpawnDrone : MonoBehaviour
             drawLine();
             transform.hasChanged = false;
         }
-        foreach (GameObject item in drones)
+        foreach (DroneData item in drones)
         {
 
-            if (item.transform.hasChanged)
+            if (item.drone.transform.hasChanged)
             {
                 drawLine();
                 UI.UpdateList();
@@ -58,8 +73,10 @@ public class SpawnDrone : MonoBehaviour
         Quaternion newDrownRotation = Quaternion.identity;
         newDrownRotation.eulerAngles = new Vector3(0,position.rotation.eulerAngles.y,0); 
         GameObject spawnedDrone = (GameObject)Instantiate(drone, position.position, newDrownRotation);
+        DroneData spawnedDroneData = new DroneData(spawnedDrone);
+        
 
-        drones.Add(spawnedDrone);
+        drones.Add(spawnedDroneData);
         dronePositions.Add(spawnedDrone.GetComponent<Renderer>().bounds.center);
         UI.UpdateList();
         if (drones.Count > 1)
@@ -69,7 +86,8 @@ public class SpawnDrone : MonoBehaviour
     }
     public void delete(int index)
     {
-        Destroy(drones[index]);
+
+        Destroy(drones[index].drone);
         drones.RemoveAt(index);
         dronePositions.RemoveAt(index);
         UI.UpdateList();
@@ -81,14 +99,14 @@ public class SpawnDrone : MonoBehaviour
 
         for (int i = 0; i < drones.Count; i++)
         {
-            Renderer rend = drones[i].GetComponent<Renderer>();
-            dronePositions[i] = drones[i].GetComponent<Renderer>().bounds.center;
+            Renderer rend = drones[i].drone.GetComponent<Renderer>();
+            dronePositions[i] = drones[i].drone.GetComponent<Renderer>().bounds.center;
             lineRenderer.SetPosition(i, rend.bounds.center);
         }
 
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, this.GetComponent<Renderer>().bounds.center);
     }   
-    public List<GameObject> getDroneList() 
+    public List<DroneData> getDroneList() 
     {
         return drones;
     }
